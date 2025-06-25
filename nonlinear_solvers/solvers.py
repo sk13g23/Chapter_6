@@ -1,3 +1,4 @@
+import cmath
 """A module providing numerical solvers for nonlinear equations."""
 
 
@@ -40,6 +41,7 @@ def newton_raphson(f, df, x_0, eps=1.0e-5, max_its=20):
             raise ConvergenceError("Max iteration reached")
         else:
             x_0 = x_next
+            counter += 1
 
 
 
