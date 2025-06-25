@@ -8,6 +8,7 @@ class ConvergenceError(Exception):
     pass
 
 
+
 def newton_raphson(f, df, x_0, eps=1.0e-5, max_its=20):
     """Solve a nonlinear equation using Newton-Raphson iteration.
 
@@ -70,9 +71,20 @@ def bisection(f, x_0, x_1, eps=1.0e-5, max_its=20):
     float
         The approximate root computed using bisection.
     """
-    # Delete these two lines when implementing the method.
-    raise NotImplementedError
-
+    counter = 0
+    while True:
+        if check_sign(f(x_0)) == check_sign(f(x_1)):
+            raise ValueError
+        x_star = (x_0 + x_1) / 2.0
+        if abs(f(x_star)) < eps:
+            return x_star
+        elif counter == max_its:
+            raise ConvergenceError("Max iteration reached")
+        elif check_sign(f(x_star)) == check_sign(f(x_1)):
+            x_1 = x_star
+        else:
+            x_0=x_star
+        counter += 1
 
 def solve(f, df, x_0, x_1, eps=1.0e-5, max_its_n=20, max_its_b=20):
     """Solve a nonlinear equation.
@@ -105,5 +117,18 @@ def solve(f, df, x_0, x_1, eps=1.0e-5, max_its_n=20, max_its_b=20):
     float
         The approximate root.
     """
-    # Delete these two lines when implementing the method.
-    raise NotImplementedError
+    try:
+        return newton_raphson(f, df, x_0, eps, max_its_n)
+    except ConvergenceError:
+        return bisection(f, x_0, x_1, eps, max_its_b)
+
+
+
+
+def check_sign(number):
+    if number < 0:
+        return "Negative"
+    elif number > 0 :
+        return "Positive"
+    else:
+        return "Zero"
